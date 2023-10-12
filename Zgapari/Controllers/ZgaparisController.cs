@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Zgapari;
 
-
 namespace Zgapari.Controllers
 {
     [Route("api/[controller]")]
@@ -15,39 +14,46 @@ namespace Zgapari.Controllers
     public class ZgaparisController : ControllerBase
     {
         private readonly dbzContext _context;
+        private readonly IZgapari _izgapari;
 
-        public ZgaparisController(dbzContext context)
+        public ZgaparisController(dbzContext context, IZgapari izgapari)
         {
             _context = context;
+            _izgapari = izgapari;
         }
 
         // GET: api/Zgaparis
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Zgapari>>> GetPosts()
+        public async Task<ActionResult<IEnumerable<Zgapari>>> GetZgaprebi()
         {
-            if (_context.Zgaprebi == null)
-            {
-                return NotFound();
-            }
-            return await _context.Zgaprebi.ToListAsync();
+         // if (_context.Zgaprebi == null)
+         // {
+         //     return NotFound();
+         // } 
+         //   return await _context.Zgaprebi.ToListAsync();
+
+            return _izgapari.GetZgaprebi();
+
         }
 
         // GET: api/Zgaparis/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Zgapari>> GetZgapari(int id)
         {
-            if (_context.Zgaprebi == null)
-            {
-                return NotFound();
-            }
-            var zgapari = await _context.Zgaprebi    .FindAsync(id);
+          //if (_context.Zgaprebi == null)
+          //{
+          //    return NotFound();
+          //}
+          //  var zgapari = await _context.Zgaprebi.FindAsync(id);
 
-            if (zgapari == null)
-            {
-                return NotFound();
-            }
+          //  if (zgapari == null)
+          //  {
+          //      return NotFound();
+          //  }
 
-            return zgapari;
+          //  return zgapari;
+
+            return _izgapari.GetZgapari(id);
         }
 
         // PUT: api/Zgaparis/5
@@ -86,15 +92,16 @@ namespace Zgapari.Controllers
         [HttpPost]
         public async Task<ActionResult<Zgapari>> PostZgapari(DTOZgapari zgapari0)
         {
-            Zgapari zgapari = new Zgapari();
+          if (_context.Zgaprebi == null)
+          {
+              return Problem("Entity set 'dbzContext.Zgaprebi'  is null.");
+          }
+
+          Zgapari zgapari = new Zgapari();
             zgapari.Title = zgapari0.Title;
             zgapari.Content = zgapari0.Content;
 
 
-            if (_context.Zgaprebi == null)
-            {
-                return Problem("Entity set 'db2Context.Posts'  is null.");
-            }
             _context.Zgaprebi.Add(zgapari);
             await _context.SaveChangesAsync();
 
