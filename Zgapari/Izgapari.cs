@@ -8,7 +8,7 @@
         Zgapari UpdateZgapari(int id, Zgapari zgapari);
         bool DeleteZgapari(int id);
 
-
+         
         
     }
 }
